@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link href="/main.css" rel="stylesheet">
+</head>
+<body>
+    <div th:replace="~{ nav.html::navbar}"></div>
+
+
+    <div class="card" th:each = "i : ${items}"><!--i item 안에있는거 하나씩 까줌-->
+
+        <img src="https://placehold.co/300">
+        <div>
+            <a th:href = "@{'/detail/' + ${i.id}}">
+        <h4 th:text="${i.title}">공경진 사람들 이름</h4>
+            </a>
+
+        <p th:text="${i.price}">숫자에 불과</p>
+            <a th:href="@{ '/edit/' + ${i.id} }">✏️</a>
+        </div>
+
+    </div>
+<!--    <div class ="card">-->
+<!--        <img src="https://placehold.co/300">-->
+<!--        <div>-->
+<!--        <h4>에피폰 레스폴</h4>-->
+<!--            <p>100만원</p>-->
+<!--        </div>-->
+<!--    </div>-->
+
+
+</body>
+</html>
