@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>로그인</title>
+</head>
+<body>
+<div th:if="${param.error}">
+    <h4>잘못된 로그인 시도입니다. 다시 시도해 주세요.</h4>
+</div>
+<form action="/login" method="POST">
+    <h4>로그인</h4>
+    <input name="username"  required>
+    <input name="password" type="password"  required>
+    <button type="submit">전송</button>
+</form>
+</body>
+</html>
