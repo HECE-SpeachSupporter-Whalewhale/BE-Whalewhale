@@ -28,6 +28,10 @@ dependencies {
 //JPA : Java 의 ORM 표준 문법
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
+    // Security 문법
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6:3.1.1.RELEASE'
+    implementation 'javax.validation:validation-api:2.0.1.Final'
 }
 
 tasks.named('test') {
