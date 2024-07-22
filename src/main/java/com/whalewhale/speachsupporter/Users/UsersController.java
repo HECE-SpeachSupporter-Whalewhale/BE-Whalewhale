@@ -51,6 +51,6 @@ public class UsersController {
                 new SimpleGrantedAuthority("일반 유저")
         ));
         System.out.println(auth);
-        return "mypage.html";
+        return "myPage.html";
     }
 }
