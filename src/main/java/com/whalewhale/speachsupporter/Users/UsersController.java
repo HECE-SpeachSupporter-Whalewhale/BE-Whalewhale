@@ -1,6 +1,8 @@
 package com.whalewhale.speachsupporter.Users;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -41,5 +43,14 @@ public class UsersController {
     @GetMapping("/login")
     public String login(){
         return "login.html";
+    }
+
+    @GetMapping("/my-page")
+    public String myPage(Authentication auth){
+        System.out.println(auth.getAuthorities().contains(
+                new SimpleGrantedAuthority("일반 유저")
+        ));
+        System.out.println(auth);
+        return "mypage.html";
     }
 }

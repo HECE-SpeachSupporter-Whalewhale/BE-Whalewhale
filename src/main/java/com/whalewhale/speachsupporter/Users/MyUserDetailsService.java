@@ -28,5 +28,6 @@ public class MyUserDetailsService implements UserDetailsService {
         authorities.add(new SimpleGrantedAuthority("일반유저"));
 
         return new User(userdata.getUser_id(), userdata.getPassword(),authorities);
+
     }
 }

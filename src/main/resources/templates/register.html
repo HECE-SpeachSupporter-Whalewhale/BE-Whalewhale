@@ -3,14 +3,74 @@
 <head>
     <meta charset="UTF-8">
     <title>회원가입 하기</title>
+    <script>
+        let authCode = ''; // 서버에서 받은 인증번호를 저장할 변수
+
+        // 인증번호 요청 함수
+        function requestAuthCode() {
+            const email = document.getElementById('email').value;
+            fetch('/requestAuthCode', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: new URLSearchParams({
+                    'email': email
+                })
+            }).then(response => response.json())
+                .then(data => {
+                    alert(data.message); // 서버로부터 받은 메시지
+                    document.getElementById('verifyForm').style.display = 'block';
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        // 인증번호 확인 함수
+        function verifyAuthCode() {
+            const email = document.getElementById('email').value;
+            const enteredCode = document.getElementById('authCode').value;
+            fetch('/verifyAuthCode', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: new URLSearchParams({
+                    'email': email,
+                    'authCode': enteredCode
+                })
+            }).then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        document.getElementById('submitBtn').style.display = 'block';
+                        alert('인증번호가 확인되었습니다. 회원가입을 진행합니다.');
+                    } else {
+                        alert('인증번호가 올바르지 않습니다.');
+                        document.getElementById('submitBtn').style.display = 'none';
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+    </script>
 </head>
 <body>
 <h3>회원가입 하기</h3>
-    <form action="/users" method="POST">
-        <input name="username" placeholder="이름"><br>
-        <input name="user_id" placeholder="아이디"><br>
-        <input name="password" type="password"><br>
-        <button type="submit">전송</button>
-    </form>
+<form id="registrationForm" action="/users" method="POST">
+    <input name="user_id" placeholder="닉네임" required><br>
+    <input id="email" name="username" placeholder="이메일" type="email" required><br>
+    <input name="password" type="password" placeholder="비밀번호" required><br>
+
+    <!-- 인증번호 요청 버튼 -->
+    <button type="button" onclick="requestAuthCode()">인증번호 요청</button>
+
+    <!-- 인증번호 입력 폼 -->
+    <div id="verifyForm" style="display:none;">
+        <label for="authCode">인증번호:</label>
+        <input id="authCode" name="authCode" type="text" required><br>
+        <button type="button" onclick="verifyAuthCode()">인증번호 확인</button>
+    </div>
+
+    <!-- 제출 버튼, 처음에는 숨겨져 있으며 인증번호가 올바르면 표시 -->
+    <button type="submit" style="display:none;" id="submitBtn">회원가입</button>
+</form>
 </body>
 </html>
