@@ -7,6 +7,8 @@ import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 @Service
@@ -15,6 +17,8 @@ public class MailService {
 
     private final JavaMailSender javaMailSender;
     private static final String senderEmail = "julie030708@gmail.com";
+
+    private final Map<String, String> emailVerificationCodes = new HashMap<>(); // 이메일과 인증번호 저장
 
     // 랜덤으로 숫자 생성
     public String createNumber() {
@@ -49,18 +53,25 @@ public class MailService {
     }
 
     // 메일 발송
-    public String sendSimpleMessage(String sendEmail) {
+    public String sendSimpleMessage(String sendEmail) throws MessagingException {
         String number = createNumber(); // 랜덤 인증번호 생성
 
-        MimeMessage message;
+        MimeMessage message = createMail(sendEmail, number); // 메일 생성
         try {
-            message = createMail(sendEmail, number); // 메일 생성
             javaMailSender.send(message); // 메일 발송
-        } catch (MessagingException | MailException e) {
+        } catch (MailException e) {
             e.printStackTrace();
             throw new IllegalArgumentException("메일 발송 중 오류가 발생했습니다.");
         }
 
+        emailVerificationCodes.put(sendEmail, number); // 인증번호 저장
+
         return number; // 생성된 인증번호 반환
+    }
+
+    // 인증번호 검증
+    public boolean verifyCode(String email, String code) {
+        String storedCode = emailVerificationCodes.get(email);
+        return storedCode != null && storedCode.equals(code);
     }
 }

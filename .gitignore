@@ -2,6 +2,7 @@ HELP.md
 .gradle
 application.properties
 application.yml
+MailConfig.java
 
 build/
 !gradle/wrapper/gradle-wrapper.jar
