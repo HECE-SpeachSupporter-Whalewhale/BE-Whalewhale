@@ -2,15 +2,20 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="shortcut icon" href="#">
     <title>회원가입 하기</title>
 </head>
+
 <body>
 <h3>회원가입 하기</h3>
-    <form action="/users" method="POST">
-        <input name="username" placeholder="이름"><br>
-        <input name="user_id" placeholder="아이디"><br>
-        <input name="password" type="password"><br>
-        <button type="submit">전송</button>
-    </form>
+<form action="/users" method="POST">
+    <input type="hidden" name="_csrf" value="${_csrf.token}"> <!-- Thymeleaf를 사용하는 경우 -->
+    <!-- CSRF 토큰을 수동으로 추가하는 방법은 사용하고 있는 템플릿 엔진에 따라 다를 수 있습니다. -->
+    <input name="user_id" placeholder="닉네임" required><br>
+    <input name="username" placeholder="아이디" type="text" required><br>
+    <input name="password" type="password" placeholder="비밀번호" required><br>
+    <button type="submit">회원가입</button>
+</form>
+
 </body>
 </html>

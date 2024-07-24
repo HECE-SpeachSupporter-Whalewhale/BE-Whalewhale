@@ -2,4 +2,8 @@
     <a class="logo", href="/">SpringMall</a>
     <a href="/list">List</a>
     <a href="/write">Write</a>
+    <form action="/logout" method="post">
+        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+        <button type="submit">로그아웃</button>
+    </form>
 </div>

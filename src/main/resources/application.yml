@@ -1,0 +1,13 @@
+spring:
+  mail:
+    # Google smtp server 사용
+    host: smtp.gmail.com
+    port: 587
+    username: jeongseon708@gmail.com
+    password: fqcu gdos wymm peik
+    properties:
+      mail:
+        smtp:
+          starttls:
+            enable: true
+          auth: true

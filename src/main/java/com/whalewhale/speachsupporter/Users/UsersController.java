@@ -1,6 +1,8 @@
 package com.whalewhale.speachsupporter.Users;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -26,20 +28,33 @@ public class UsersController {
     }
 
     @PostMapping("/users")
-    String addMember(@RequestParam String username,
-                     @RequestParam String user_id,
-                     @RequestParam @Size(min = 8, max = 12, message = "비밀번호는 8자에서 12자 사이어야 합니다.") String password) {
+    public String addMember(@RequestParam String username,
+                            @RequestParam String user_id,
+                            @RequestParam @Size(min = 8, max = 12, message = "비밀번호는 8자에서 12자 사이어야 합니다.") String password) {
         var hash = passwordEncoder.encode(password);
         Users users = new Users();
         users.setUsername(username);
         users.setUser_id(user_id);
+        users.setIsAdmin(false);
         users.setPassword(hash);
         usersRepository.save(users);
-        return "redirect:/list";
+
+        System.out.println("User saved: " + users);
+        return "redirect:";
     }
+
 
     @GetMapping("/login")
     public String login(){
         return "login.html";
+    }
+
+    @GetMapping("/my-page")
+    public String myPage(Authentication auth){
+        System.out.println(auth.getAuthorities().contains(
+                new SimpleGrantedAuthority("ROLE_USER")
+        ));
+        System.out.println(auth);
+        return "myPage.html";
     }
 }

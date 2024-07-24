@@ -18,15 +18,19 @@ public class MyUserDetailsService implements UserDetailsService {
     private final UsersRepository usersRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String user_id) throws UsernameNotFoundException {
-        var result = usersRepository.findByUsername(user_id);
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        var result = usersRepository.findByUsername(username);
         if(result.isEmpty()) {
             throw new UsernameNotFoundException("아이디를 잘못 입력하셨습니다.");
         }
         var userdata = result.get();
         List<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority("일반유저"));
+        if (userdata.getIsAdmin() != null && userdata.getIsAdmin()) {
+            authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN")); // 관리자 권한
+        } else {
+            authorities.add(new SimpleGrantedAuthority("ROLE_USER")); // 일반 사용자 권한
+        }
 
-        return new User(userdata.getUser_id(), userdata.getPassword(),authorities);
+        return new User(userdata.getUsername(), userdata.getPassword(), authorities);
     }
 }

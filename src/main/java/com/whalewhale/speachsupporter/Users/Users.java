@@ -15,8 +15,12 @@ public class Users {
     @Column(nullable = false)
     private String username;
 
+    @Column(nullable = false)
     private String password;
 
     @Column(nullable = false)
     private String user_id;
+
+    @Column(nullable = false)
+    private Boolean isAdmin;
 }
