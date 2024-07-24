@@ -2,20 +2,33 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="shortcut icon" href="#">
     <title>회원가입 하기</title>
 </head>
-
 <body>
 <h3>회원가입 하기</h3>
-<form action="/users" method="POST">
-    <input type="hidden" name="_csrf" value="${_csrf.token}"> <!-- Thymeleaf를 사용하는 경우 -->
-    <!-- CSRF 토큰을 수동으로 추가하는 방법은 사용하고 있는 템플릿 엔진에 따라 다를 수 있습니다. -->
-    <input name="user_id" placeholder="닉네임" required><br>
-    <input name="username" placeholder="아이디" type="text" required><br>
+<form id="registerForm" action="/users" method="POST">
+    <input type="hidden" name="_csrf" value="${_csrf.token}">
+    <input name="nickname" placeholder="닉네임" required><br>
+    <input name="username" placeholder="이메일" type="email" required id="emailField"><br>
     <input name="password" type="password" placeholder="비밀번호" required><br>
+    <input name="authCode" placeholder="인증 코드" type="text" required><br>
+    <button type="button" onclick="requestAuthCode()">인증 코드 요청</button>
     <button type="submit">회원가입</button>
 </form>
 
+<div th:if="${param.error}">
+    <p th:text="'인증 코드가 유효하지 않습니다. 다시 시도해 주세요.'"></p>
+</div>
+
+<script>
+    function requestAuthCode() {
+        const email = document.querySelector('#emailField').value;
+        fetch('/requestAuthCode?email=' + encodeURIComponent(email), {
+            method: 'POST'
+        }).then(response => response.text())
+            .then(data => alert(data))
+            .catch(error => console.error('Error:', error));
+    }
+</script>
 </body>
 </html>

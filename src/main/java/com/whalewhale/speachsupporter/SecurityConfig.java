@@ -32,7 +32,7 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable()) // CSRF 보호 비활성화
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/login", "/register", "/", "/list").permitAll() // 인증 없이 접근 허용
+                        .requestMatchers("/login", "/register", "/", "/list", "/emailCheck").permitAll() // 인증 없이 접근 허용
                         .requestMatchers("/users").permitAll()
                         .anyRequest().authenticated()) // 나머지 요청은 인증 필요
                 .formLogin(formLogin -> formLogin
