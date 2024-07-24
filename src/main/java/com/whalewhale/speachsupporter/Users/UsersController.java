@@ -31,20 +31,16 @@ public class UsersController {
     public String addMember(@RequestParam String username,
                             @RequestParam String user_id,
                             @RequestParam @Size(min = 8, max = 12, message = "비밀번호는 8자에서 12자 사이어야 합니다.") String password) {
-        System.out.println("Received POST request for /users");
-        System.out.println("Username: " + username);
-        System.out.println("User ID: " + user_id);
-        System.out.println("Password: " + password);
-
         var hash = passwordEncoder.encode(password);
         Users users = new Users();
         users.setUsername(username);
         users.setUser_id(user_id);
+        users.setIsAdmin(false);
         users.setPassword(hash);
         usersRepository.save(users);
 
         System.out.println("User saved: " + users);
-        return "redirect:/list";
+        return "redirect:";
     }
 
 
