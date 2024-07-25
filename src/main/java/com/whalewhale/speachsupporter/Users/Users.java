@@ -22,5 +22,8 @@ public class Users {
     private String nickname;
 
     @Column(nullable = false)
+    private String user_job;
+
+    @Column(nullable = false)
     private Boolean isAdmin;
 }

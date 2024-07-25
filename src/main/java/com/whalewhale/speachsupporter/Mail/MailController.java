@@ -1,12 +1,13 @@
 package com.whalewhale.speachsupporter.Mail;
 
 import jakarta.mail.MessagingException;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/email") // 공통적인 URL 경로 추가
+@RequestMapping("/email")
 public class MailController {
 
     private final MailService mailService;
@@ -19,11 +20,12 @@ public class MailController {
         return authCode;
     }
 
-
     @ResponseBody
-    @PostMapping("/verify") // 인증번호 검증 엔드포인트
-    public String verifyEmail(@RequestBody MailDto mailDto) {
+    @PostMapping("/verify")
+    public String verifyEmail(@RequestBody MailDto mailDto, HttpSession session) {
         boolean isValid = mailService.verifyCode(mailDto.getEmail(), mailDto.getCode());
+        // 세션 속성 이름을 "emailVerified"로 설정
+        session.setAttribute("emailVerified", isValid);
         return isValid ? "인증 성공" : "인증 실패";
     }
 }
