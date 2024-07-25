@@ -18,7 +18,7 @@
 
     <div>
         <label for="inputCode">인증번호</label>
-        <input type="text" name="inputCode" id="inputCode" maxlength="6" placeholder="인증번호를 입력해주세요" required>
+        <input type="text" name="inputCode" id="inputCode" placeholder="인증번호를 입력해주세요" required>
         <button type="button" onclick="verifyCode()">확인하기</button>
         <span id="verificationResult"></span>
     </div>
@@ -26,12 +26,6 @@
     <div>
         <label for="password">Password</label>
         <input type="password" name="password" id="password" placeholder="비밀번호를 입력해주세요" required>
-    </div>
-
-    <div>
-        <label for="confirmPassword">Confirm Password</label>
-        <input type="password" name="confirmPassword" id="confirmPassword" placeholder="비밀번호 확인" onblur="checkPassword()" required>
-        <span id="confirmMsg"></span>
     </div>
 
     <div>
@@ -45,27 +39,33 @@
 <script>
     function sendEmail() {
         const username = document.querySelector('#username').value;
-        fetch('/requestAuthCode?email=' + encodeURIComponent(username), {
-            method: 'POST'
+        fetch('/email/send?username=' + encodeURIComponent(username), {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            }
         })
             .then(response => response.text())
-            .then(data => alert(data))
+            .then(data => {
+                // 인증번호가 성공적으로 전송되었다는 알림
+                alert('인증번호가 이메일로 발송되었습니다.');
+            })
             .catch(error => console.error('Error:', error));
     }
 
     function verifyCode() {
         const username = document.querySelector('#username').value;
         const code = document.querySelector('#inputCode').value;
-        fetch('/verifyAuthCode', {
+        fetch('/email/verify', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({ email: username, code: code })
         })
-            .then(response => response.json())
+            .then(response => response.text())
             .then(result => {
-                if (result.success) {
+                if (result === '인증 성공') {
                     document.querySelector('#verificationResult').textContent = '인증 성공';
                 } else {
                     document.querySelector('#verificationResult').textContent = '인증 실패';
@@ -83,17 +83,6 @@
         // Add email duplicate check logic here
     }
 
-    function checkPassword() {
-        const password = document.querySelector('#password').value;
-        const confirmPassword = document.querySelector('#confirmPassword').value;
-        const confirmMsg = document.querySelector('#confirmMsg');
-
-        if (password !== confirmPassword) {
-            confirmMsg.textContent = '비밀번호가 일치하지 않습니다.';
-        } else {
-            confirmMsg.textContent = '';
-        }
-    }
 </script>
 </body>
 </html>
