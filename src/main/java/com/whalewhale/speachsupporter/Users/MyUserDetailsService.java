@@ -26,9 +26,9 @@ public class MyUserDetailsService implements UserDetailsService {
         var userdata = result.get();
         List<GrantedAuthority> authorities = new ArrayList<>();
         if (userdata.getIsAdmin() != null && userdata.getIsAdmin()) {
-            authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN")); // 관리자 권한
+            authorities.add(new SimpleGrantedAuthority("ADMIN")); // 관리자 권한
         } else {
-            authorities.add(new SimpleGrantedAuthority("ROLE_USER")); // 일반 사용자 권한
+            authorities.add(new SimpleGrantedAuthority("USER")); // 일반 사용자 권한
         }
 
         return new User(userdata.getUsername(), userdata.getPassword(), authorities);

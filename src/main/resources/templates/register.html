@@ -1,21 +1,99 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
-    <link rel="shortcut icon" href="#">
     <title>회원가입 하기</title>
+    <script th:inline="javascript" th:src="@{/js/memberInfoCheck.js}"></script>
 </head>
-
 <body>
 <h3>회원가입 하기</h3>
-<form action="/users" method="POST">
-    <input type="hidden" name="_csrf" value="${_csrf.token}"> <!-- Thymeleaf를 사용하는 경우 -->
-    <!-- CSRF 토큰을 수동으로 추가하는 방법은 사용하고 있는 템플릿 엔진에 따라 다를 수 있습니다. -->
-    <input name="user_id" placeholder="닉네임" required><br>
-    <input name="username" placeholder="아이디" type="text" required><br>
-    <input name="password" type="password" placeholder="비밀번호" required><br>
-    <button type="submit">회원가입</button>
+<form id="SignUpForm" onsubmit="SignUpFormSubmitCheck(event)" action="/member/save" method="post">
+    <div>
+        <label for="username">Email</label>
+        <input type="email" name="username" id="username" placeholder="이메일을 입력해주세요" onblur="emailDuplicateCheck()" required>
+        <button type="button" onclick="sendEmail()">인증번호 요청</button>
+        <span id="checkEmail"></span>
+    </div>
+
+    <div>
+        <label for="inputCode">인증번호</label>
+        <input type="text" name="inputCode" id="inputCode" maxlength="6" placeholder="인증번호를 입력해주세요" required>
+        <button type="button" onclick="verifyCode()">확인하기</button>
+        <span id="verificationResult"></span>
+    </div>
+
+    <div>
+        <label for="password">Password</label>
+        <input type="password" name="password" id="password" placeholder="비밀번호를 입력해주세요" required>
+    </div>
+
+    <div>
+        <label for="confirmPassword">Confirm Password</label>
+        <input type="password" name="confirmPassword" id="confirmPassword" placeholder="비밀번호 확인" onblur="checkPassword()" required>
+        <span id="confirmMsg"></span>
+    </div>
+
+    <div>
+        <label for="name">User Name</label>
+        <input type="text" name="name" id="name" placeholder="이름을 입력해주세요" required>
+    </div>
+
+    <button type="submit">가입하기</button>
 </form>
 
+<script>
+    function sendEmail() {
+        const username = document.querySelector('#username').value;
+        fetch('/requestAuthCode?email=' + encodeURIComponent(username), {
+            method: 'POST'
+        })
+            .then(response => response.text())
+            .then(data => alert(data))
+            .catch(error => console.error('Error:', error));
+    }
+
+    function verifyCode() {
+        const username = document.querySelector('#username').value;
+        const code = document.querySelector('#inputCode').value;
+        fetch('/verifyAuthCode', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ email: username, code: code })
+        })
+            .then(response => response.json())
+            .then(result => {
+                if (result.success) {
+                    document.querySelector('#verificationResult').textContent = '인증 성공';
+                } else {
+                    document.querySelector('#verificationResult').textContent = '인증 실패';
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+    function SignUpFormSubmitCheck(event) {
+        // Add form validation logic here
+        // event.preventDefault(); // Prevent form from submitting normally
+    }
+
+    function emailDuplicateCheck() {
+        // Add email duplicate check logic here
+    }
+
+    function checkPassword() {
+        const password = document.querySelector('#password').value;
+        const confirmPassword = document.querySelector('#confirmPassword').value;
+        const confirmMsg = document.querySelector('#confirmMsg');
+
+        if (password !== confirmPassword) {
+            confirmMsg.textContent = '비밀번호가 일치하지 않습니다.';
+        } else {
+            confirmMsg.textContent = '';
+        }
+    }
+</script>
 </body>
 </html>
