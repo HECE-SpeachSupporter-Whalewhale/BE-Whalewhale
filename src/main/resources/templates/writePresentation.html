@@ -8,12 +8,12 @@
     <title>PresentationAdd</title>
 </head>
 <body>
-<div th:replace="~{nav.html::navbar}"</div>
-<form action="/presentationAdd" method="POST">
-    <input name = "id" th:value = "${data.id}">
-    <input name = "title" th:value = "${data.title}">
-    <input name = "body" th:value = "${data.body}">
-    <button type = "submit">전송<button>
+<div th:replace="~{nav.html::navbar}"></div>
+<form action="/addPresentation" method="POST">
+    제목<input name = "title">
+    본문<input name = "body">
+    <button type = "submit">전송</button>
+        </form>
 
 
 

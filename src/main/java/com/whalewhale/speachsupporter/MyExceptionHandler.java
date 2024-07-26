@@ -13,10 +13,10 @@ public class MyExceptionHandler {
         return ResponseEntity.status(400).body("유저타입에러");
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> handler(){
-        return ResponseEntity.status(400).body("유저에러");
-    }
+//    @ExceptionHandler(Exception.class)
+//    public ResponseEntity<String> handler(){
+//        return ResponseEntity.status(400).body("유저에러");
+//    }
 
 
 }

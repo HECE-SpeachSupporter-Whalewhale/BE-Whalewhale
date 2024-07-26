@@ -10,11 +10,12 @@
 <body>
     <div th:replace="~{nav.html::navbar}"></div>
 
-    <div class="card">
-        <div>
-            <h4 th:text="${result.get(0).title}"></h4>
-            </div>
-
+    <div th:each="presentation : ${presentations}">
+        <h2 th:text="${presentation.title}"></h2>
+        <p th:text="${presentation.body}"></p>
+        <form th:action="@{/deletePresentation/{id}(id=${presentation.presentation_id})}" method="post">
+            <button type="submit">Delete</button>
+        </form>
     </div>
 
 </body>
