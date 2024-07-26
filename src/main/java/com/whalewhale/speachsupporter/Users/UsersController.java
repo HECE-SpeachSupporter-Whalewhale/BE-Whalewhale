@@ -1,5 +1,6 @@
 package com.whalewhale.speachsupporter.Users;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -30,18 +31,41 @@ public class UsersController {
     @PostMapping("/users")
     public String addMember(@RequestParam String username,
                             @RequestParam String nickname,
-                            @RequestParam @Size(min = 8, max = 12, message = "비밀번호는 8자에서 12자 사이어야 합니다.") String password) {
+                            @RequestParam String user_job,
+                            @RequestParam @Size(min = 8, max = 12, message = "비밀번호는 8자에서 12자 사이어야 합니다.") String password,
+                            HttpSession session) {
+        // 이메일 인증 확인
+        Boolean emailVerified = (Boolean) session.getAttribute("emailVerified");
+        if (emailVerified == null || !emailVerified) {
+            return "redirect:/register?error=emailNotVerified";
+        }
+
+        // 비밀번호 해싱
         var hash = passwordEncoder.encode(password);
+
+        // 사용자 객체 생성 및 설정
         Users users = new Users();
         users.setUsername(username);
         users.setNickname(nickname);
+        users.setUser_job(user_job);
         users.setIsAdmin(false);
         users.setPassword(hash);
-        usersRepository.save(users);
+
+        // DB에 저장
+        try {
+            usersRepository.save(users);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "redirect:/register?error=saveFailed";
+        }
+
+        // 인증 상태 세션에서 제거
+        session.removeAttribute("emailVerified");
 
         System.out.println("User saved: " + users);
-        return "redirect:";
+        return "redirect:/";
     }
+
 
 
     @GetMapping("/login")
