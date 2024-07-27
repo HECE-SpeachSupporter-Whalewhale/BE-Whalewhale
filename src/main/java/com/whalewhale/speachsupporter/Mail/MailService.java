@@ -29,9 +29,9 @@ public class MailService {
             int index = random.nextInt(3); // 0~2까지 랜덤, 랜덤값으로 switch문 실행
 
             switch (index) {
-                case 0 -> key.append((char) (random.nextInt(26) + 97)); // 소문자
-                case 1 -> key.append((char) (random.nextInt(26) + 65)); // 대문자
-                case 2 -> key.append(random.nextInt(10)); // 숫자
+                case 0 -> key.append((char) (random.nextInt(26) + 97));
+                case 1 -> key.append((char) (random.nextInt(26) + 65));
+                case 2 -> key.append(random.nextInt(10));
             }
         }
         return key.toString();

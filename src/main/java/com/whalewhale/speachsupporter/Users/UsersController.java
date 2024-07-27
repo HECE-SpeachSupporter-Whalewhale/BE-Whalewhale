@@ -6,6 +6,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -66,8 +67,6 @@ public class UsersController {
         return "redirect:/";
     }
 
-
-
     @GetMapping("/login")
     public String login(){
         return "login.html";
@@ -80,6 +79,35 @@ public class UsersController {
         ));
         System.out.println(auth);
         return "myPage.html";
+    }
+
+    @GetMapping("/oauth2/success")
+    public String handleOAuth2Success(Authentication authentication) {
+        OAuth2User oauth2User = (OAuth2User) authentication.getPrincipal();
+        String email = oauth2User.getAttribute("email");
+
+        Users user = usersRepository.findByUsername(email).orElse(null);
+
+        return "redirect:/complete-profile";
+    }
+
+    @GetMapping("/complete-profile")
+    public String completeProfile() {
+        return "complete-profile.html";
+    }
+
+    @PostMapping("/complete-profile")
+    public String saveProfile(@RequestParam String user_job, Authentication authentication) {
+        OAuth2User oauth2User = (OAuth2User) authentication.getPrincipal();
+        String email = oauth2User.getAttribute("email");
+
+        Users user = usersRepository.findByUsername(email).orElse(null);
+        if (user != null) {
+            user.setUser_job(user_job);
+            usersRepository.save(user);
+        }
+
+        return "redirect:/";
     }
 
 }
