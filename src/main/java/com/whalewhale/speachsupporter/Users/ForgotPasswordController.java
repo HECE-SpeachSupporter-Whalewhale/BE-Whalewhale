@@ -6,11 +6,17 @@ import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/password")
+@Validated
 public class ForgotPasswordController {
 
     private final MailService mailService;
@@ -47,11 +53,14 @@ public class ForgotPasswordController {
 }
 
 class PasswordResetRequest {
+    @Email(message = "유효한 이메일 주소를 입력하세요.")
+    @NotEmpty(message = "이메일은 필수 입력 항목입니다.")
     private String email;
+    @NotEmpty(message = "인증 코드를 입력하세요.")
     private String code;
+    @Size(min = 8, max = 12, message = "비밀번호는 8자에서 12자 사이여야 합니다.")
     private String newPassword;
 
-    // Getters and setters
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
     public String getCode() { return code; }
