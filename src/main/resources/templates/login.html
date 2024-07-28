@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="shortcut icon" href="#">
     <title>로그인</title>
 </head>
 <body>
@@ -14,7 +13,58 @@
     <input name="username" placeholder="아이디" required>
     <input name="password" type="password" placeholder="비밀번호" required>
     <button type="submit">전송</button>
-    <a href="/oauth2/authorization/google">google login</a>
+    <a href="/oauth2/authorization/google">Google 로그인</a>
 </form>
+
+<!-- 비밀번호 찾기 -->
+<h4>비밀번호 찾기</h4>
+<form id="forgotPasswordForm">
+    <input type="email" id="email" placeholder="이메일을 입력해주세요" required>
+    <button type="button" onclick="sendResetCode()">인증코드 요청</button>
+</form>
+
+<!-- 비밀번호 재설정 -->
+<div id="resetPasswordSection" style="display: none;">
+    <input type="text" id="code" placeholder="인증코드" required>
+    <input type="password" id="newPassword" placeholder="새 비밀번호" required>
+    <button type="button" onclick="resetPassword()">비밀번호 재설정</button>
+</div>
+
+<script>
+    function sendResetCode() {
+        const email = document.getElementById('email').value;
+        fetch('/password/forgot?email=' + encodeURIComponent(email), {
+            method: 'POST',
+        })
+            .then(response => response.text())
+            .then(data => {
+                alert(data);
+                document.getElementById('resetPasswordSection').style.display = 'block';
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+    function resetPassword() {
+        const email = document.getElementById('email').value;
+        const code = document.getElementById('code').value;
+        const newPassword = document.getElementById('newPassword').value;
+
+        fetch('/password/reset', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ email: email, code: code, newPassword: newPassword })
+        })
+            .then(response => response.text())
+            .then(result => {
+                alert(result);
+                if (result === '비밀번호가 성공적으로 재설정되었습니다.') {
+                    window.location.href = '/login';
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    }
+</script>
 </body>
 </html>

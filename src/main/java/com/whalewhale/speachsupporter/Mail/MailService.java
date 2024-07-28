@@ -74,4 +74,9 @@ public class MailService {
         String storedCode = emailVerificationCodes.get(email);
         return storedCode != null && storedCode.equals(code);
     }
+
+    //인증 코드 무효화
+    public void invalidateCode(String email) {
+        emailVerificationCodes.remove(email);
+    }
 }

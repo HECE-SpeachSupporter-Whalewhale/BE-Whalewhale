@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.validation.constraints.Size;
+import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -39,6 +40,11 @@ public class UsersController {
         Boolean emailVerified = (Boolean) session.getAttribute("emailVerified");
         if (emailVerified == null || !emailVerified) {
             return "redirect:/register?error=emailNotVerified";
+        }
+
+        // 사용자 존재 여부 확인
+        if (usersRepository.findByUsername(username).isPresent()) {
+            return "redirect:/register?error=userExists";
         }
 
         // 비밀번호 해싱
@@ -67,6 +73,7 @@ public class UsersController {
         return "redirect:/";
     }
 
+
     @GetMapping("/login")
     public String login(){
         return "login.html";
@@ -86,9 +93,13 @@ public class UsersController {
         OAuth2User oauth2User = (OAuth2User) authentication.getPrincipal();
         String email = oauth2User.getAttribute("email");
 
-        Users user = usersRepository.findByUsername(email).orElse(null);
+        Users user = usersRepository.findByUsername(email).orElseThrow(() -> new RuntimeException("User not found"));
 
-        return "redirect:/complete-profile";
+        if ("INCOMPLETE_PROFILE".equals(user.getUser_job())) {
+            return "redirect:/complete-profile";
+        } else {
+            return "redirect:/";
+        }
     }
 
     @GetMapping("/complete-profile")
@@ -101,11 +112,9 @@ public class UsersController {
         OAuth2User oauth2User = (OAuth2User) authentication.getPrincipal();
         String email = oauth2User.getAttribute("email");
 
-        Users user = usersRepository.findByUsername(email).orElse(null);
-        if (user != null) {
-            user.setUser_job(user_job);
-            usersRepository.save(user);
-        }
+        Users user = usersRepository.findByUsername(email).orElseThrow(() -> new RuntimeException("User not found"));
+        user.setUser_job(user_job);
+        usersRepository.save(user);
 
         return "redirect:/";
     }

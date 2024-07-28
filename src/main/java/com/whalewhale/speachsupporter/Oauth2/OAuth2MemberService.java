@@ -19,10 +19,7 @@ public class OAuth2MemberService extends DefaultOAuth2UserService {
     @Override
     @Transactional
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
-        System.out.println("loadUser called");
-
         OAuth2User oAuth2User = super.loadUser(userRequest);
-        System.out.println("oAuth2User = " + oAuth2User.getAttributes());
 
         String email = (String) oAuth2User.getAttributes().get("email");
         String name = (String) oAuth2User.getAttributes().get("name");
@@ -32,21 +29,13 @@ public class OAuth2MemberService extends DefaultOAuth2UserService {
             user = new Users();
             user.setUsername(email);
             user.setNickname(name);
-            user.setUser_job("Not specified");
             user.setIsAdmin(false);
             user.setPassword(null);
-
-            try {
-                usersRepository.save(user);
-                System.out.println("User saved: " + user);
-            } catch (Exception e) {
-                System.err.println("Failed to save user: " + e.getMessage());
-                e.printStackTrace();
-            }
-
+            // Set a temporary flag to indicate the profile is incomplete
+            user.setUser_job("INCOMPLETE_PROFILE");
+            usersRepository.save(user);
         }
 
         return oAuth2User;
     }
-
 }
