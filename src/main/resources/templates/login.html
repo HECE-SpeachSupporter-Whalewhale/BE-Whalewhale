@@ -39,9 +39,16 @@
             .then(response => response.text())
             .then(data => {
                 alert(data);
-                document.getElementById('resetPasswordSection').style.display = 'block';
+                if (data === '인증 코드가 이메일로 전송되었습니다.') {
+                    document.getElementById('resetPasswordSection').style.display = 'block';
+                } else {
+                    document.getElementById('resetPasswordSection').style.display = 'none';
+                }
             })
-            .catch(error => console.error('Error:', error));
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('resetPasswordSection').style.display = 'none';
+            });
     }
 
     function resetPassword() {
