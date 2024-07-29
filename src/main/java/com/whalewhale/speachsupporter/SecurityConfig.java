@@ -1,5 +1,6 @@
 package com.whalewhale.speachsupporter;
 
+import com.whalewhale.speachsupporter.Oauth2.OAuth2MemberService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -16,45 +17,57 @@ public class SecurityConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        // 비밀번호 암호화를 위한 BCryptPasswordEncoder 빈 설정
         return new BCryptPasswordEncoder();
     }
 
     @Bean
     public CsrfTokenRepository csrfTokenRepository() {
-        // CSRF 토큰 저장소 설정
-        HttpSessionCsrfTokenRepository repository = new HttpSessionCsrfTokenRepository();
-        return repository;
+        return new HttpSessionCsrfTokenRepository();
     }
-
+    
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable()) // CSRF 보호 비활성화
+                .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/login", "/register", "/", "/list", "/email/send","/email/verify", "/Presentation", "/writePresentation", "/remember").permitAll() // 인증 없이 접근 허용
+                        .requestMatchers("/login", "/register", "/", "/list", "/email/send",
+                                "/email/verify", "/Presentation", "/writePresentation", "/remember",
+                                "/oauth2/**", "/complete-profile", "/password/forgot",
+                                    "/password/reset").permitAll()
                         .requestMatchers("/users").permitAll()
-                        .anyRequest().authenticated()) // 나머지 요청은 인증 필요
+                        .anyRequest().authenticated())
                 .formLogin(formLogin -> formLogin
-                        .loginPage("/login") // 로그인 페이지 설정
+                        .loginPage("/login")
                         .successHandler((request, response, authentication) -> {
                             System.out.println("로그인 성공: " + authentication.getName());
-                            response.sendRedirect("/"); // 로그인 성공 후 리다이렉트
+                            response.sendRedirect("/");
                         })
                         .failureHandler((request, response, exception) -> {
                             System.out.println("로그인 실패: " + exception.getMessage());
-                            response.sendRedirect("/login?error=true"); // 로그인 실패 시 리다이렉트
+                            response.sendRedirect("/login?error=true");
                         }))
                 .logout(logout -> logout
-                        .logoutUrl("/logout") // 로그아웃 요청 URL
+                        .logoutUrl("/logout")
                         .logoutSuccessHandler((request, response, authentication) -> {
                             System.out.println("로그아웃 성공: " + (authentication != null ? authentication.getName() : "Anonymous"));
-                            response.sendRedirect("/"); // 로그아웃 성공 후 리다이렉트
+                            response.sendRedirect("/");
                         })
-                        .invalidateHttpSession(true) // 세션 무효화
-                        .deleteCookies("JSESSIONID")); // 쿠키 삭제
+                        .invalidateHttpSession(true)
+                        .deleteCookies("JSESSIONID"))
+                .oauth2Login(oauth2 -> oauth2
+                        .loginPage("/login")
+                        .userInfoEndpoint(userInfo -> userInfo
+                                .userService(oAuth2UserService()))
+                        .successHandler((request, response, authentication) -> {
+                            System.out.println("OAuth2 로그인 성공: " + authentication.getName());
+                            response.sendRedirect("/oauth2/success");
+                        }));
 
         return http.build();
     }
 
+    @Bean
+    public OAuth2MemberService oAuth2UserService() {
+        return new OAuth2MemberService();
+    }
 }

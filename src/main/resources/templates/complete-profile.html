@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete Your Profile</title>
+</head>
+<body>
+<h1>Complete Your Profile</h1>
+<form action="/complete-profile" method="POST">
+    <label for="user_job">Job:</label>
+    <input type="text" id="user_job" name="user_job" required>
+    <button type="submit">Save</button>
+</form>
+</body>
+</html>
