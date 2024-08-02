@@ -34,6 +34,9 @@ public class Presentation {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    @Column(nullable = false)
+    private Boolean isBookmarked = false;
+
     @PrePersist
     protected void onCreate() {
         if (title == null) {

@@ -12,13 +12,14 @@
     <button type="submit">검색</button>
 </form>
 
-<a href="/writePresentation">새 프레젠테이션 작성</a>
+<br>
 
 <table>
     <thead>
     <tr>
         <th>ID</th>
         <th>제목</th>
+        <th>북마크</th>
         <th>작업</th>
     </tr>
     </thead>
@@ -26,6 +27,11 @@
     <tr th:each="presentation : ${presentations}">
         <td th:text="${presentation.presentation_id}"></td>
         <td th:text="${presentation.title}"></td>
+        <td>
+            <form th:action="@{'/bookmarks/toggle/' + ${presentation.presentation_id}}" method="post">
+                <button type="submit" th:text="${presentation.isBookmarked ? '북마크 해제' : '북마크'}"></button>
+            </form>
+        </td>
         <td>
             <form th:action="@{'/deletePresentation/' + ${presentation.presentation_id}}" method="post">
                 <button type="submit">삭제</button>
