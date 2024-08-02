@@ -13,7 +13,7 @@ public class BookmarkController {
     private final PresentationRepository presentationRepository;
 
     @PostMapping("/toggle/{id}")
-    public String toggleBookmark(@PathVariable Integer id) {
+    public String toggleBookmark(@PathVariable Integer id) { //id로 발표자료 찾기
         Presentation presentation = presentationRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid presentation Id:" + id));
         presentation.setIsBookmarked(!presentation.getIsBookmarked());
