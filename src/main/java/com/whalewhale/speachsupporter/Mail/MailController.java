@@ -24,7 +24,7 @@ public class MailController {
     @PostMapping("/verify")
     public String verifyEmail(@RequestBody MailDto mailDto, HttpSession session) {
         boolean isValid = mailService.verifyCode(mailDto.getEmail(), mailDto.getCode());
-        // 세션 속성 이름을 "emailVerified"로 설정
+        // 세션 속성 이름을 emailVerified로 설정
         session.setAttribute("emailVerified", isValid);
         return isValid ? "인증 성공" : "인증 실패";
     }

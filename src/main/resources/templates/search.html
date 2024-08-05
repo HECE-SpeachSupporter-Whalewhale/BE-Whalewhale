@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>프레젠테이션 검색</title>
+</head>
+<body>
+<h1>프레젠테이션 검색</h1>
+
+<form action="/search" method="get">
+    <input type="text" name="title" th:value="${searchTitle}" placeholder="검색할 제목 입력">
+    <button type="submit">검색</button>
+</form>
+
+<br>
+
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>제목</th>
+        <th>북마크</th>
+        <th>작업</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="presentation : ${presentations}">
+        <td th:text="${presentation.presentation_id}"></td>
+        <td th:text="${presentation.title}"></td>
+        <td>
+            <form th:action="@{'/bookmarks/toggle/' + ${presentation.presentation_id}}" method="post">
+                <button type="submit" th:text="${presentation.isBookmarked ? '북마크 해제' : '북마크'}"></button>
+            </form>
+        </td>
+        <td>
+            <form th:action="@{'/deletePresentation/' + ${presentation.presentation_id}}" method="post">
+                <button type="submit">삭제</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
