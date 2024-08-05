@@ -4,6 +4,7 @@ import com.whalewhale.speachsupporter.Item;
 import com.whalewhale.speachsupporter.ItemRepository;
 import com.whalewhale.speachsupporter.ItemService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +16,6 @@ import java.util.List;
 
 public class PresentationController {
     private final PresentationRepository presentationRepository;//db입출력 함수 들어있다
-
 
     @GetMapping("/remember")
     String remember(Model model){
@@ -39,14 +39,6 @@ Presentation presentation = new Presentation();
        presentationRepository.save(presentation);
         System.out.println(title);
         System.out.println(body);
-
-
-        return "redirect:/remember";
-    }
-
-    @PostMapping("/deletePresentation/{id}")
-    String deletePresentation(@PathVariable Integer id) {
-        presentationRepository.deleteById(id);
         return "redirect:/remember";
     }
 }
