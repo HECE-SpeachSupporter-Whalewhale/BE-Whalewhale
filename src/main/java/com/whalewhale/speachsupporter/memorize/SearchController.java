@@ -1,6 +1,7 @@
 package com.whalewhale.speachsupporter.memorize;
 
 import com.whalewhale.speachsupporter.Presentation.Presentation;
+import com.whalewhale.speachsupporter.memorize.SearchRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,29 +13,53 @@ import java.util.stream.Stream;
 @Controller
 @RequiredArgsConstructor
 public class SearchController {
-    private final SearchRepository presentationRepository;
-    private final BookmarkRepository bookmarkRepository;
+    private final SearchRepository searchRepository;
 
     @GetMapping("/search")
-    public String search(@RequestParam(name = "title", required = false) String title, Model model) {
-        List<Presentation> bookmarkedPresentations = bookmarkRepository.findByIsBookmarkedOrderByCreatedAtDesc(true);
-        //북마크된 발표자료 조회
-
+    public String search(@RequestParam(name = "title", required = false) String title,
+                         @RequestParam(name = "sort", defaultValue = "latest") String sort,
+                         Model model) {
         List<Presentation> results;
-        //제목으로 검색하거나 북마크 되지 않은 발표자료 조회
-        if (title != null && !title.isEmpty()) {
-            results = presentationRepository.findByTitleContainingIgnoreCase(title);
+
+        if (title == null || title.isEmpty()) {
+            switch (sort) {
+                case "oldest":
+                    results = searchRepository.findAllByOrderByCreatedAtAsc();
+                    break;
+                case "bookmarked":
+                    results = searchRepository.findByIsBookmarkedTrueOrderByCreatedAtDesc();
+                    break;
+                case "latest":
+                default:
+                    results = searchRepository.findAllByOrderByCreatedAtDesc();
+                    break;
+            }
         } else {
-            results = bookmarkRepository.findByIsBookmarkedFalseOrderByCreatedAtDesc();
+            switch (sort) {
+                case "oldest":
+                    results = searchRepository.findByTitleContainingIgnoreCaseOrderByCreatedAtAsc(title);
+                    break;
+                case "bookmarked":
+                    results = searchRepository.findByTitleContainingIgnoreCaseAndIsBookmarkedTrueOrderByCreatedAtDesc(title);
+                    break;
+                case "latest":
+                default:
+                    results = searchRepository.findByTitleContainingIgnoreCaseOrderByCreatedAtDesc(title);
+                    break;
+            }
         }
 
-        List<Presentation> combinedResults = Stream.concat(bookmarkedPresentations.stream(), results.stream())
-                .distinct()
-                .toList();
-        //북마크된 발표자료와 검색 결과 결합
-
-        model.addAttribute("presentations", combinedResults);
+        model.addAttribute("presentations", results);
         model.addAttribute("searchTitle", title);
+        model.addAttribute("currentSort", sort);
         return "search";
     }
+
+    @PostMapping("/deletePresentation/{id}")
+    public String deletePresentation(@PathVariable("id") Integer id) {
+        searchRepository.deleteById(id);
+        return "redirect:/search";
+    }
+
+
 }

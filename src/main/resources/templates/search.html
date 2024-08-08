@@ -9,6 +9,11 @@
 
 <form action="/search" method="get">
     <input type="text" name="title" th:value="${searchTitle}" placeholder="검색할 제목 입력">
+    <select name="sort">
+        <option value="latest" th:selected="${currentSort == 'latest'}">최신순</option>
+        <option value="oldest" th:selected="${currentSort == 'oldest'}">오래된순</option>
+        <option value="bookmarked" th:selected="${currentSort == 'bookmarked'}">즐겨찾기</option>
+    </select>
     <button type="submit">검색</button>
 </form>
 
@@ -19,7 +24,8 @@
     <tr>
         <th>ID</th>
         <th>제목</th>
-        <th>북마크</th>
+        <th>즐겨찾기</th>
+        <th>작성일</th>
         <th>작업</th>
     </tr>
     </thead>
@@ -27,12 +33,12 @@
     <tr th:each="presentation : ${presentations}">
         <td th:text="${presentation.presentation_id}"></td>
         <td th:text="${presentation.title}"></td>
+        <td th:text="${presentation.isBookmarked ? '★' : '☆'}"></td>
+        <td th:text="${#temporals.format(presentation.createdAt, 'yyyy-MM-dd HH:mm')}"></td>
         <td>
             <form th:action="@{'/bookmarks/toggle/' + ${presentation.presentation_id}}" method="post">
-                <button type="submit" th:text="${presentation.isBookmarked ? '북마크 해제' : '북마크'}"></button>
+                <button type="submit" th:text="${presentation.isBookmarked ? '즐겨찾기 해제' : '즐겨찾기'}"></button>
             </form>
-        </td>
-        <td>
             <form th:action="@{'/deletePresentation/' + ${presentation.presentation_id}}" method="post">
                 <button type="submit">삭제</button>
             </form>

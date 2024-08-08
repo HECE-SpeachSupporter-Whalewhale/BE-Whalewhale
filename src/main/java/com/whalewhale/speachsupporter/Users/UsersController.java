@@ -34,13 +34,12 @@ public class UsersController {
     @PostMapping("/users")
     public String addMember(@RequestParam String username,
                             @RequestParam @Size(max = 4, message = "닉네임은 4자 이하여야 합니다.") String nickname,
-                            @RequestParam String emailPrefix,
-                            @RequestParam String emailDomain,
                             @RequestParam String user_job,
                             @RequestParam @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,12}$",
                                     message = "비밀번호는 영문자, 숫자를 혼합하여 8자 이상 12자 이하여야 합니다.") String password,
                             HttpSession session) {
         // 이메일 인증 확인
+
         Boolean emailVerified = (Boolean) session.getAttribute("emailVerified");
         if (emailVerified == null || !emailVerified) {
             return "redirect:/register?error=emailNotVerified";
