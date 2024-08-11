@@ -1,5 +1,6 @@
 package com.whalewhale.speachsupporter.Presentation;
 
+import com.whalewhale.speachsupporter.Speed.Speed;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,8 +15,9 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class Presentation {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Integer presentation_id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer presentation_id;
 
     @Column(nullable = false)
     private String title;
@@ -40,19 +42,18 @@ public class Presentation {
     @PrePersist
     protected void onCreate() {
         if (title == null) {
-        title = "제목 없는 글입니다.";
-
+            title = "제목 없는 글입니다.";
         }
         if (user_id == null) {
             user_id = 0;
         }
-        createdAt = LocalDateTime.now();
-        updatedAt = LocalDateTime.now();
     }
 
     @PreUpdate
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
     }
-}
 
+    @OneToOne(mappedBy = "presentation", cascade = CascadeType.ALL)
+    private Speed speed;
+}

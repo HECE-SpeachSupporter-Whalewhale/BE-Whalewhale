@@ -56,10 +56,18 @@ public class SearchController {
     }
 
     @PostMapping("/deletePresentation/{id}")
-    public String deletePresentation(@PathVariable("id") Integer id) {
-        searchRepository.deleteById(id);
-        return "redirect:/search";
+    public String deletePresentation(@PathVariable("id") Integer id, @RequestHeader(value = "Referer", required = false) String referer) {
+        System.out.println("Attempting to delete presentation with id: " + id);
+        if (searchRepository.existsById(id)) {
+            searchRepository.deleteById(id);
+            System.out.println("Deleted presentation with id: " + id);
+        } else {
+            System.out.println("Presentation with id " + id + " does not exist.");
+        }
+        return "redirect:" + (referer != null ? referer : "/");
     }
+
+
 
 
 }

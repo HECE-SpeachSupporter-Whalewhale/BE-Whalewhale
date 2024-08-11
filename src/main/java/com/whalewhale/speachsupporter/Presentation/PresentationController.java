@@ -1,10 +1,8 @@
 package com.whalewhale.speachsupporter.Presentation;
 
-import com.whalewhale.speachsupporter.Item;
-import com.whalewhale.speachsupporter.ItemRepository;
-import com.whalewhale.speachsupporter.ItemService;
+import com.whalewhale.speachsupporter.Speed.Speed;
+import com.whalewhale.speachsupporter.Speed.SpeedRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -13,33 +11,45 @@ import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
-
 public class PresentationController {
-    private final PresentationRepository presentationRepository;//db입출력 함수 들어있다
+    private final PresentationRepository presentationRepository;
+    private final SpeedRepository speedRepository;
 
     @GetMapping("/remember")
-    String remember(Model model){
-        //JPA로 데이터 입출력 하려면 1. repository만들기, 2.DB입출력 원하는 클래스에 repository 등록, 3. 사용
+    String remember(Model model) {
         List<Presentation> result = presentationRepository.findAll();
-        System.out.println(result);
         model.addAttribute("presentations", result);
-
         return "remember.html";
     }
 
     @GetMapping("/writePresentation")
-    String writePresentation(){
+    String writePresentation() {
         return "writePresentation.html";
     }
-    @PostMapping("/addPresentation")
-    String addPresentation(@RequestParam(name = "title") String title, @RequestParam(name = "body") String body ){
-Presentation presentation = new Presentation();
-       presentation.setTitle(title);
-       presentation.setBody(body);
-       presentationRepository.save(presentation);
-        System.out.println(title);
-        System.out.println(body);
-        return "redirect:/remember";
-    }
 
+    @PostMapping("/addPresentation")
+    public String addPresentation(@RequestParam(name = "title") String title,
+                                  @RequestParam(name = "body") String body,
+                                  @RequestParam(name = "speed_check", defaultValue = "false") Boolean speedCheck,
+                                  @RequestParam(name = "speed_minute") Integer speedMinute,
+                                  @RequestParam(name = "speed_second") Integer speedSecond,
+                                  Model model) {
+
+        // Presentation 생성 및 저장
+        Presentation presentation = new Presentation();
+        presentation.setTitle(title);
+        presentation.setBody(body);
+        presentationRepository.save(presentation);
+
+        // Speed 생성 및 저장
+        Speed speed = new Speed();
+        speed.setPresentation(presentation);
+        speed.setSpeed_check(speedCheck);
+        speed.setSpeed_minute(speedMinute);
+        speed.setSpeed_second(speedSecond);
+        speedRepository.save(speed);
+
+        model.addAttribute("successMessage", "발표가 성공적으로 추가되었습니다.");
+        return "writePresentation.html";
+    }
 }
