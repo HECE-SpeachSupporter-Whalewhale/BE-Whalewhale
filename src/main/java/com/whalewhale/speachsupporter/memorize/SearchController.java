@@ -1,50 +1,57 @@
 package com.whalewhale.speachsupporter.memorize;
 
 import com.whalewhale.speachsupporter.Presentation.Presentation;
-import com.whalewhale.speachsupporter.memorize.SearchRepository;
+import com.whalewhale.speachsupporter.Users.Users;
+import com.whalewhale.speachsupporter.Users.UsersRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Stream;
 
 @Controller
 @RequiredArgsConstructor
 public class SearchController {
     private final SearchRepository searchRepository;
+    private final UsersRepository usersRepository;
 
     @GetMapping("/search")
     public String search(@RequestParam(name = "title", required = false) String title,
                          @RequestParam(name = "sort", defaultValue = "latest") String sort,
                          Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Users currentUser = usersRepository.findByUsername(auth.getName())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
         List<Presentation> results;
 
         if (title == null || title.isEmpty()) {
             switch (sort) {
                 case "oldest":
-                    results = searchRepository.findAllByOrderByCreatedAtAsc();
+                    results = searchRepository.findAllByUserOrderByCreatedAtAsc(currentUser);
                     break;
                 case "bookmarked":
-                    results = searchRepository.findByIsBookmarkedTrueOrderByCreatedAtDesc();
+                    results = searchRepository.findByUserAndIsBookmarkedTrueOrderByCreatedAtDesc(currentUser);
                     break;
                 case "latest":
                 default:
-                    results = searchRepository.findAllByOrderByCreatedAtDesc();
+                    results = searchRepository.findAllByUserOrderByCreatedAtDesc(currentUser);
                     break;
             }
         } else {
             switch (sort) {
                 case "oldest":
-                    results = searchRepository.findByTitleContainingIgnoreCaseOrderByCreatedAtAsc(title);
+                    results = searchRepository.findByUserAndTitleContainingIgnoreCaseOrderByCreatedAtAsc(currentUser, title);
                     break;
                 case "bookmarked":
-                    results = searchRepository.findByTitleContainingIgnoreCaseAndIsBookmarkedTrueOrderByCreatedAtDesc(title);
+                    results = searchRepository.findByUserAndTitleContainingIgnoreCaseAndIsBookmarkedTrueOrderByCreatedAtDesc(currentUser, title);
                     break;
                 case "latest":
                 default:
-                    results = searchRepository.findByTitleContainingIgnoreCaseOrderByCreatedAtDesc(title);
+                    results = searchRepository.findByUserAndTitleContainingIgnoreCaseOrderByCreatedAtDesc(currentUser, title);
                     break;
             }
         }
@@ -54,20 +61,4 @@ public class SearchController {
         model.addAttribute("currentSort", sort);
         return "search";
     }
-
-    @PostMapping("/deletePresentation/{id}")
-    public String deletePresentation(@PathVariable("id") Integer id, @RequestHeader(value = "Referer", required = false) String referer) {
-        System.out.println("Attempting to delete presentation with id: " + id);
-        if (searchRepository.existsById(id)) {
-            searchRepository.deleteById(id);
-            System.out.println("Deleted presentation with id: " + id);
-        } else {
-            System.out.println("Presentation with id " + id + " does not exist.");
-        }
-        return "redirect:" + (referer != null ? referer : "/");
-    }
-
-
-
-
 }
