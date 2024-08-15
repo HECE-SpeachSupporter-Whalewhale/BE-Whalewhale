@@ -1,5 +1,7 @@
 package com.whalewhale.speachsupporter.Presentation;
 
+import com.whalewhale.speachsupporter.Speed.Speed;
+import com.whalewhale.speachsupporter.Users.Users;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,12 +12,12 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDateTime;
 
 @Entity
-@ToString
 @Getter
 @Setter
 public class Presentation {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Integer presentation_id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer presentation_id;
 
     @Column(nullable = false)
     private String title;
@@ -23,8 +25,10 @@ public class Presentation {
     @Column(columnDefinition = "TEXT")
     private String body;
 
-    @Column(nullable = false)
-    private Integer user_id;
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    @ToString.Exclude
+    private Users user;
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
@@ -39,20 +43,29 @@ public class Presentation {
 
     @PrePersist
     protected void onCreate() {
-        if (title == null) {
-        title = "제목 없는 글입니다.";
-
+        if (title == null || title.isEmpty()) {
+            title = "제목 없는 글입니다.";
         }
-        if (user_id == null) {
-            user_id = 0;
-        }
-        createdAt = LocalDateTime.now();
-        updatedAt = LocalDateTime.now();
     }
 
     @PreUpdate
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
     }
-}
 
+    @OneToOne(mappedBy = "presentation", cascade = CascadeType.ALL)
+    @ToString.Exclude
+    private Speed speed;
+
+    @Override
+    public String toString() {
+        return "Presentation{" +
+                "presentation_id=" + presentation_id +
+                ", title='" + title + '\'' +
+                ", body='" + (body != null ? body.substring(0, Math.min(body.length(), 20)) + "..." : null) + '\'' +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                ", isBookmarked=" + isBookmarked +
+                '}';
+    }
+}

@@ -1,21 +1,25 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>PresentationAdd</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Presentation Add</title>
 </head>
 <body>
 <div th:replace="~{nav.html::navbar}"></div>
 <form action="/addPresentation" method="POST">
-    제목<input name = "title">
-    본문<input name = "body">
-    <button type = "submit">전송</button>
-        </form>
+    <h2>Presentation Details</h2>
+    제목: <input type="text" name="title" required><br>
+    본문: <textarea name="body" required></textarea><br>
 
+    <h2>Speed Details</h2>
+    Speed Check: <input type="checkbox" name="speed_check"><br>
+    Speed Minute: <input type="number" name="speed_minute" min="0" required><br>
+    Speed Second: <input type="number" name="speed_second" min="0" max="59" required><br>
 
+    <button type="submit">전송</button>
+</form>
 
+<div th:if="${successMessage}" th:text="${successMessage}"></div>
 </body>
 </html>

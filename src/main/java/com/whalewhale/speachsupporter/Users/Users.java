@@ -1,11 +1,13 @@
 package com.whalewhale.speachsupporter.Users;
 
+import com.whalewhale.speachsupporter.Presentation.Presentation;
 import jakarta.persistence.*;
 import lombok.Data;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -37,4 +39,7 @@ public class Users {
     @NotEmpty
     @Column(nullable = false)
     private Boolean isAdmin;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Presentation> presentations; // Presentation 객체 리스트
 }

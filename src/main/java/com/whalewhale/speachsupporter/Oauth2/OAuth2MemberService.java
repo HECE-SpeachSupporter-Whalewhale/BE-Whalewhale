@@ -31,7 +31,6 @@ public class OAuth2MemberService extends DefaultOAuth2UserService {
             user.setNickname(name);
             user.setIsAdmin(false);
             user.setPassword(null);
-            // Set a temporary flag to indicate the profile is incomplete
             user.setUser_job("INCOMPLETE_PROFILE");
             usersRepository.save(user);
         }
