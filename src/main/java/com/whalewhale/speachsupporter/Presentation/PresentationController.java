@@ -4,10 +4,13 @@ import com.whalewhale.speachsupporter.Speed.Speed;
 import com.whalewhale.speachsupporter.Speed.SpeedRepository;
 import com.whalewhale.speachsupporter.Users.Users;
 import com.whalewhale.speachsupporter.Users.UsersRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -26,16 +29,17 @@ public class PresentationController {
     private final UsersRepository usersRepository;
 
     @GetMapping("/remember")
-    String remember(Model model) {
+    public String remember(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String currentUsername = authentication.getName();
+        String currentUsername = authentication.getName().toLowerCase(); // username을 소문자로 변환하여 사용
         Users currentUser = usersRepository.findByUsername(currentUsername)
                 .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다: " + currentUsername));
-        //유저 본인의 게시글만 확인
+
         List<Presentation> result = presentationRepository.findByUser(currentUser);
         model.addAttribute("presentations", result);
         return "remember.html";
     }
+
 
     @GetMapping("/writePresentation")
     String writePresentation() {
@@ -84,7 +88,7 @@ public class PresentationController {
     }
 
     @PostMapping("/deletePresentation/{id}")
-    public String deletePresentation(@PathVariable Integer id) {
+    public String deletePresentation(@PathVariable Integer id, HttpServletRequest request) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUsername = authentication.getName();
         Users currentUser = usersRepository.findByUsername(currentUsername)
@@ -98,6 +102,8 @@ public class PresentationController {
         }
 
         presentationRepository.delete(presentation);
-        return "redirect:/remember";
+
+        String referer = request.getHeader("Referer");
+        return "redirect:" + (referer != null ? referer : "/remember");
     }
 }
