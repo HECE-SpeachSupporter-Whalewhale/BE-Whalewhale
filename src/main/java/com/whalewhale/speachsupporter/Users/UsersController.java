@@ -82,15 +82,6 @@ public class UsersController {
         return "login.html";
     }
 
-    @GetMapping("/my-page")
-    public String myPage(Authentication auth){
-        System.out.println(auth.getAuthorities().contains(
-                new SimpleGrantedAuthority("ROLE_USER")
-        ));
-        System.out.println(auth);
-        return "myPage.html";
-    }
-
     @GetMapping("/oauth2/success")
     public String handleOAuth2Success(Authentication authentication) {
         OAuth2User oauth2User = (OAuth2User) authentication.getPrincipal();
