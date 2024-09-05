@@ -32,7 +32,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/login", "/register", "/", "/list", "/email/send",
                                 "/email/verify", "/Presentation", "/oauth2/**", "/complete-profile", "/password/forgot",
-                                    "/password/reset").permitAll()
+                                    "/password/reset", "/bot/**", "/generate/**").permitAll()
                         .requestMatchers("/users").permitAll()
                         .anyRequest().authenticated())
                 .formLogin(formLogin -> formLogin
