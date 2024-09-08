@@ -58,10 +58,7 @@ public class CustomBotController {
             return "Error: " + e.getMessage();
         }
 
-
-
         return chatGPTResponse.getChoices().get(0).getMessage().getContent();
-
     }
 
     private String createPromptFromRequest(PresentationRequest presentationRequest) {

@@ -1,26 +1,24 @@
 package com.whalewhale.speachsupporter.gpt.DTO;
 
-import java.util.ArrayList;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 public class PresentationRequest {
 
     private String title;
     private String body;
-    private List<String> keywordName;
-    private int speedMinute;
-    private int speedSecond;
-    private String userJob;
 
-    // 기본 생성자 추가
-    public PresentationRequest() {
-        this.title = "";
-        this.body = "";
-        this.keywordName = new ArrayList<>(); // 빈 리스트로 초기화
-        this.speedMinute = 0; // 기본값 0분
-        this.speedSecond = 0; // 기본값 0초
-        this.userJob = "Unknown"; // 기본값 설정
-    }
+    @JsonProperty("keyword_name")
+    private List<String> keywordName;
+
+    @JsonProperty("speed_minute")
+    private int speedMinute;
+
+    @JsonProperty("speed_second")
+    private int speedSecond;
+
+    @JsonProperty("user_job")
+    private String userJob;
 
     // Getters and Setters
     public String getTitle() {
