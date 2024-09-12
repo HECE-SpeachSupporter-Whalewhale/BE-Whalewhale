@@ -1,5 +1,7 @@
 package com.whalewhale.speachsupporter.Presentation;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.whalewhale.speachsupporter.Speed.Speed;
 import com.whalewhale.speachsupporter.Users.Users;
 import jakarta.persistence.*;
@@ -28,6 +30,7 @@ public class Presentation {
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     @ToString.Exclude
+    @JsonIgnore
     private Users user;
 
     @CreationTimestamp
@@ -55,6 +58,7 @@ public class Presentation {
 
     @OneToOne(mappedBy = "presentation", cascade = CascadeType.ALL)
     @ToString.Exclude
+    @JsonManagedReference // 무한 루프 방지
     private Speed speed;
 
     @Override

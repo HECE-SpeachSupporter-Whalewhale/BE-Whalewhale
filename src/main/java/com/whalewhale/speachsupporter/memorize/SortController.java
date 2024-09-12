@@ -2,26 +2,25 @@ package com.whalewhale.speachsupporter.memorize;
 
 import com.whalewhale.speachsupporter.Presentation.Presentation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
+@RequestMapping("/sort")
 public class SortController {
 
     private final PresentationSortRepository presentationSortRepository;
 
-    @GetMapping("/sort/search")
-    public String searchPresentations(@RequestParam(required = false) String title,
-                                      @RequestParam(required = false, defaultValue = "latest") String sort,
-                                      Model model) {
-        List<Presentation> presentations;
+    @PostMapping("/search")
+    public ResponseEntity<List<Presentation>> searchPresentations(@RequestBody Map<String, Object> requestBody) {
+        String title = (String) requestBody.getOrDefault("title", "");
+        String sort = (String) requestBody.getOrDefault("sort", "latest");
 
-        if (title == null) title = "";
+        List<Presentation> presentations;
 
         switch (sort) {
             case "name":
@@ -36,9 +35,6 @@ public class SortController {
                 break;
         }
 
-        model.addAttribute("presentations", presentations);
-        model.addAttribute("searchTitle", title);
-        model.addAttribute("currentSort", sort);
-        return "search";
+        return ResponseEntity.ok(presentations);
     }
 }

@@ -6,22 +6,23 @@ import com.whalewhale.speachsupporter.Users.UsersRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
+@RequestMapping("/search")
 public class SearchController {
     private final SearchRepository searchRepository;
     private final UsersRepository usersRepository;
 
-    @GetMapping("/search")
-    public String search(@RequestParam(name = "title", required = false) String title,
-                         @RequestParam(name = "sort", defaultValue = "latest") String sort,
-                         Model model) {
+    @GetMapping
+    public ResponseEntity<List<Presentation>> search(
+            @RequestParam(name = "title", required = false) String title,
+            @RequestParam(name = "sort", defaultValue = "latest") String sort) {
+
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Users currentUser = usersRepository.findByUsername(auth.getName())
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -56,9 +57,6 @@ public class SearchController {
             }
         }
 
-        model.addAttribute("presentations", results);
-        model.addAttribute("searchTitle", title);
-        model.addAttribute("currentSort", sort);
-        return "search";
+        return ResponseEntity.ok(results);
     }
 }
