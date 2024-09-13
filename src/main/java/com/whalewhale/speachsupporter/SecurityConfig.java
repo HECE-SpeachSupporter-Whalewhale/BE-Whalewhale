@@ -1,6 +1,9 @@
 package com.whalewhale.speachsupporter;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.whalewhale.speachsupporter.Oauth2.OAuth2MemberService;
+import com.whalewhale.speachsupporter.Users.Users;
+import com.whalewhale.speachsupporter.Users.UsersRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -11,10 +14,18 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
+    private final UsersRepository usersRepository;
+
+    public SecurityConfig(UsersRepository usersRepository) {
+        this.usersRepository = usersRepository;
+    }
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -26,11 +37,11 @@ public class SecurityConfig {
     }
     
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, UsersRepository usersRepository) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/login", "/register", "/", "/list", "/email/send",
+                        .requestMatchers("/login", "/register","/api/**", "/", "/list", "/email/send",
                                 "/email/verify", "/Presentation", "/oauth2/**", "/complete-profile", "/password/forgot",
                                     "/password/reset", "/bot/**", "/generate/**").permitAll()
                         .requestMatchers("/users").permitAll()
@@ -38,12 +49,32 @@ public class SecurityConfig {
                 .formLogin(formLogin -> formLogin
                         .loginPage("/login")
                         .successHandler((request, response, authentication) -> {
-                            System.out.println("로그인 성공: " + authentication.getName());
-                            response.sendRedirect("/");
-                        })
-                        .failureHandler((request, response, exception) -> {
-                            System.out.println("로그인 실패: " + exception.getMessage());
-                            response.sendRedirect("/login?error=true");
+                            // 로그인 성공 시 JSON 응답
+                            response.setContentType("application/json;charset=UTF-8");
+                            response.setStatus(200);
+
+                            String username = authentication.getName();
+                            Users user = usersRepository.findByUsername(username)
+                                    .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+
+                            Map<String, Object> data = new HashMap<>();
+                            data.put("message", "로그인 성공");
+                            data.put("username", user.getUsername());
+                            data.put("nickname", user.getNickname());
+
+                            ObjectMapper objectMapper = new ObjectMapper();
+                            response.getWriter().write(objectMapper.writeValueAsString(data));
+                        }).failureHandler((request, response, exception) -> {
+                            // 로그인 실패 시 JSON 응답
+                            response.setContentType("application/json;charset=UTF-8");
+                            response.setStatus(401);
+
+                            Map<String, Object> data = new HashMap<>();
+                            data.put("message", "로그인 실패");
+                            data.put("error", exception.getMessage());
+
+                            ObjectMapper objectMapper = new ObjectMapper();
+                            response.getWriter().write(objectMapper.writeValueAsString(data));
                         }))
                 .logout(logout -> logout
                         .logoutUrl("/logout")
