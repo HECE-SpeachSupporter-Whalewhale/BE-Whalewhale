@@ -44,6 +44,9 @@ public class Presentation {
     @Column(nullable = false)
     private Boolean isBookmarked = false;
 
+    @Column(name = "presentation_usage")
+    private String usage;
+
     @PrePersist
     protected void onCreate() {
         if (title == null || title.isEmpty()) {
@@ -70,6 +73,7 @@ public class Presentation {
                 ", createdAt=" + createdAt +
                 ", updatedAt=" + updatedAt +
                 ", isBookmarked=" + isBookmarked +
+                ", usage=" + usage +
                 '}';
     }
 }
