@@ -5,6 +5,8 @@ import com.whalewhale.speachsupporter.gpt.DTO.ChatGPTResponse;
 import com.whalewhale.speachsupporter.gpt.DTO.PresentationRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,7 +28,7 @@ public class CustomBotController {
     private RestTemplate template;
 
     @PostMapping("/generate")
-    public String generatePresentation(@RequestBody PresentationRequest presentationRequest) {
+    public ResponseEntity<?> generatePresentation(@RequestBody PresentationRequest presentationRequest) {
         String prompt = createPromptFromRequest(presentationRequest);
         ChatGPTRequest request = new ChatGPTRequest(this.model, prompt);
         ChatGPTResponse chatGPTResponse = null;
@@ -52,29 +54,21 @@ public class CustomBotController {
             }
 
             if (chatGPTResponse == null) {
-                return "Error: Too many requests. Please try again later.";
+                return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS)
+                        .body("Error: Too many requests. Please try again later.");
             }
         } catch (HttpClientErrorException e) {
-            return "Error: " + e.getMessage();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error: " + e.getMessage());
         }
 
-        return chatGPTResponse.getChoices().get(0).getMessage().getContent();
+        return ResponseEntity.ok(chatGPTResponse);
     }
 
     private String createPromptFromRequest(PresentationRequest presentationRequest) {
         String keywords = (presentationRequest.getKeywordName() != null) ?
                 String.join(", ", presentationRequest.getKeywordName()) :
                 "No keywords provided";
-
-        System.out.println(String.format(
-                "제목: \"%s\"\n본문: \"%s\"\n키워드: \"%s\"\n제한시간: \"%d분 %d초\"\n사용자 유형: \"%s\"",
-                presentationRequest.getTitle(),
-                presentationRequest.getBody(),
-                keywords,
-                presentationRequest.getSpeedMinute(),
-                presentationRequest.getSpeedSecond(),
-                presentationRequest.getUserJob()
-        ));
 
         return String.format(
                 "제목: \"%s\"\n본문: \"%s\"\n키워드: \"%s\"\n제한시간: \"%d분 %d초\"\n사용자 유형: \"%s\"",
