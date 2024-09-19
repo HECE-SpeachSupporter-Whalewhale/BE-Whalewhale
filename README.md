@@ -39,7 +39,7 @@
 | :-------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------: | :------------------------------------------------------------------------------: |
 | <img  width="100px" src="https://avatars.githubusercontent.com/u/157506327?v=4" /> | <img width="100px" src="https://avatars.githubusercontent.com/u/107687577?v=4" /> | <img width="100px" src="https://avatars.githubusercontent.com/u/128308578?v=4"/> |
 |                    [@mrangjw](https://github.com/mrangjw)                     |                      [@dmp100](https://github.com/dmp100)                       |                     [@ms2548](https://github.com/ms2548)                     |
-|                         프론트엔드 총괄                         |                          GPT Fine-tuning<br />위스와 발표하기 페이지 구현                          |                                위스와 추억하기 페이지 구현                                |
+|                         프론트엔드 총괄                         |                          GPT Fine-tuning<br />위스와 발표하기 페이지 구현                          |                                위스와 추억하기 페이지 구현                                |
 ### BACKEND
 
 |                                         이재욱                                          |                                      오정선                                      |
