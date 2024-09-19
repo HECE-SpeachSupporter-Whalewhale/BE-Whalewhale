@@ -39,14 +39,14 @@
 | :-------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------: | :------------------------------------------------------------------------------: |
 | <img  width="100px" src="https://avatars.githubusercontent.com/u/157506327?v=4" /> | <img width="100px" src="https://avatars.githubusercontent.com/u/107687577?v=4" /> | <img width="100px" src="https://avatars.githubusercontent.com/u/128308578?v=4"/> |
 |                    [@mrangjw](https://github.com/mrangjw)                     |                      [@dmp100](https://github.com/dmp100)                       |                     [@ms2548](https://github.com/ms2548)                     |
-|                          메인화면 <br /> 회원가입/로그인                          |                          회원 정보 수정<br /> 추천 상점                           |                                유저 감정 & 캘린더                                |
+|                         프론트엔드 총괄                         |                          GPT Fine-tuning<br />위스와 발표하기 페이지 구현                          |                                위스와 추억하기 페이지 구현                                |
 ### BACKEND
 
 |                                         이재욱                                          |                                      오정선                                      |
 | :-------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------: |
 | <img width="100px" src="https://avatars.githubusercontent.com/u/100843910?v=4"/> | <img width="100px" src="https://avatars.githubusercontent.com/u/128763594?v=4" /> |
 |                       [@22-JWL](https://github.com/22-JWL)                        |           [@gosumjigi](https://github.com/gosumjigi)           |
-| 그림일기 AI 관련 기능 <br /> 프로필 대시보드 및 <br /> 추천상점 기능 <br /> docker 배포 |            회원정보 수정 <br /> 유효성 검사 <br /> 자동 별명생성 기능            |
+| 서버구축 <br /> 위스의 도움받기 기능 구형 |            ERD 작성 및 백엔드 구현            |
 
 ## 🖱 사용 기술
 
