@@ -41,5 +41,5 @@ public class Users {
     private Boolean isAdmin;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Presentation> presentations; // Presentation 객체 리스트
+    private List<Presentation> presentations;
 }
