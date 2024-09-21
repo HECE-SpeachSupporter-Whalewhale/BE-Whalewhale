@@ -1,6 +1,5 @@
 package com.whalewhale.speachsupporter.Users;
 
-import com.whalewhale.speachsupporter.Mail.MailDto;
 import com.whalewhale.speachsupporter.Mail.MailService;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
@@ -20,21 +19,37 @@ public class ForgotPasswordController {
     private final PasswordEncoder passwordEncoder;
 
     @PostMapping("/forgot")
-    public ResponseEntity<Map<String, String>> forgotPassword(@RequestBody Map<String, String> request) throws MessagingException {
-        String email = request.get("email");
-        var userOptional = usersRepository.findByUsername(email);
+    public ResponseEntity<?> forgotPassword(@RequestParam(required = false) String email,
+                                            @RequestBody(required = false) Map<String, String> body) throws MessagingException {
+        String userEmail = email != null ? email : (body != null ? body.get("email") : null);
+        if (userEmail == null || userEmail.isEmpty()) {
+            return ResponseEntity.badRequest().body(Map.of("message", "이메일이 제공되지 않았습니다."));
+        }
+
+        var userOptional = usersRepository.findByUsername(userEmail);
 
         if (userOptional.isEmpty() || userOptional.get().getPassword() == null) {
             return ResponseEntity.badRequest().body(Map.of("message", "등록되지 않은 이메일입니다."));
         }
 
-        mailService.sendSimpleMessage(email);
+        String authCode = mailService.sendSimpleMessage(userEmail);
         return ResponseEntity.ok(Map.of("message", "인증 코드가 이메일로 전송되었습니다."));
     }
 
     @PostMapping("/reset")
-    public ResponseEntity<Map<String, String>> resetPassword(@RequestBody PasswordResetRequest request) {
-        var userOptional = usersRepository.findByUsername(request.getEmail());
+    public ResponseEntity<?> resetPassword(@RequestParam(required = false) String email,
+                                           @RequestParam(required = false) String code,
+                                           @RequestParam(required = false) String newPassword,
+                                           @RequestBody(required = false) Map<String, String> body) {
+        String resetEmail = email != null ? email : (body != null ? body.get("email") : null);
+        String resetCode = code != null ? code : (body != null ? body.get("code") : null);
+        String resetNewPassword = newPassword != null ? newPassword : (body != null ? body.get("newPassword") : null);
+
+        if (resetEmail == null || resetCode == null || resetNewPassword == null) {
+            return ResponseEntity.badRequest().body(Map.of("message", "필요한 정보가 모두 제공되지 않았습니다."));
+        }
+
+        var userOptional = usersRepository.findByUsername(resetEmail);
 
         if (userOptional.isEmpty() || userOptional.get().getPassword() == null) {
             return ResponseEntity.badRequest().body(Map.of("message", "등록되지 않은 이메일입니다."));
@@ -42,30 +57,16 @@ public class ForgotPasswordController {
 
         var user = userOptional.get();
 
-        if (mailService.verifyCode(request.getEmail(), request.getCode())) {
-            user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        if (mailService.verifyCode(resetEmail, resetCode)) {
+            user.setPassword(passwordEncoder.encode(resetNewPassword));
             usersRepository.save(user);
 
             // 인증 코드 초기화
-            mailService.invalidateCode(request.getEmail());
+            mailService.invalidateCode(resetEmail);
 
             return ResponseEntity.ok(Map.of("message", "비밀번호가 성공적으로 재설정되었습니다."));
         }
 
         return ResponseEntity.badRequest().body(Map.of("message", "인증 실패"));
     }
-}
-
-class PasswordResetRequest {
-    private String email;
-    private String code;
-    private String newPassword;
-
-    // Getters and setters
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
-    public String getCode() { return code; }
-    public void setCode(String code) { this.code = code; }
-    public String getNewPassword() { return newPassword; }
-    public void setNewPassword(String newPassword) { this.newPassword = newPassword; }
 }
