@@ -44,10 +44,10 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, UsersRepository usersRepository) throws Exception {
         http
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .cors(cors -> cors.configurationSource(corsConfigurationSource())) // CORS 설정 적용
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/login", "/register", "/api/**", "/", "/list", "/email/send",
+                        .requestMatchers("/login", "/register","/api/**", "/", "/list", "/email/send",
                                 "/email/verify", "/Presentation", "/oauth2/**", "/complete-profile", "/password/forgot",
                                 "/password/reset", "/bot/**", "/generate/**").permitAll()
                         .requestMatchers("/users").permitAll()
@@ -55,6 +55,7 @@ public class SecurityConfig {
                 .formLogin(formLogin -> formLogin
                         .loginPage("/login")
                         .successHandler((request, response, authentication) -> {
+                            // 로그인 성공 시 JSON 응답
                             response.setContentType("application/json;charset=UTF-8");
                             response.setStatus(200);
 
@@ -69,8 +70,8 @@ public class SecurityConfig {
 
                             ObjectMapper objectMapper = new ObjectMapper();
                             response.getWriter().write(objectMapper.writeValueAsString(data));
-                        })
-                        .failureHandler((request, response, exception) -> {
+                        }).failureHandler((request, response, exception) -> {
+                            // 로그인 실패 시 JSON 응답
                             response.setContentType("application/json;charset=UTF-8");
                             response.setStatus(401);
 
@@ -84,12 +85,8 @@ public class SecurityConfig {
                 .logout(logout -> logout
                         .logoutUrl("/logout")
                         .logoutSuccessHandler((request, response, authentication) -> {
-                            response.setContentType("application/json;charset=UTF-8");
-                            response.setStatus(200);
-                            Map<String, String> data = new HashMap<>();
-                            data.put("message", "로그아웃 성공");
-                            ObjectMapper objectMapper = new ObjectMapper();
-                            response.getWriter().write(objectMapper.writeValueAsString(data));
+                            System.out.println("로그아웃 성공: " + (authentication != null ? authentication.getName() : "Anonymous"));
+                            response.sendRedirect("/");
                         })
                         .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID"))
@@ -98,13 +95,8 @@ public class SecurityConfig {
                         .userInfoEndpoint(userInfo -> userInfo
                                 .userService(oAuth2UserService()))
                         .successHandler((request, response, authentication) -> {
-                            response.setContentType("application/json;charset=UTF-8");
-                            response.setStatus(200);
-                            Map<String, String> data = new HashMap<>();
-                            data.put("message", "OAuth2 로그인 성공");
-                            data.put("username", authentication.getName());
-                            ObjectMapper objectMapper = new ObjectMapper();
-                            response.getWriter().write(objectMapper.writeValueAsString(data));
+                            System.out.println("OAuth2 로그인 성공: " + authentication.getName());
+                            response.sendRedirect("/oauth2/success");
                         }));
 
         return http.build();
@@ -118,13 +110,13 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("*"));
-        configuration.setAllowCredentials(true);
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000")); // 허용할 출처 설정
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS")); // 허용할 메서드 설정
+        configuration.setAllowedHeaders(Arrays.asList("*")); // 허용할 헤더 설정
+        configuration.setAllowCredentials(true); // 자격 증명 허용 여부 설정
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
+        source.registerCorsConfiguration("/**", configuration); // 모든 경로에 대해 CORS 설정 적용
         return source;
     }
 }
