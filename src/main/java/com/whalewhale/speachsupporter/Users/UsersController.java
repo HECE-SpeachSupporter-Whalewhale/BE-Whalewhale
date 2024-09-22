@@ -51,6 +51,28 @@ public class UsersController {
         return ResponseEntity.ok(Map.of("message", "회원가입이 완료되었습니다."));
     }
 
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody Map<String, String> loginRequest) {
+        String username = loginRequest.get("username");
+        String password = loginRequest.get("password");
+
+        var userOptional = usersRepository.findByUsername(username);
+        if (userOptional.isEmpty()) {
+            return ResponseEntity.badRequest().body(Map.of("message", "사용자를 찾을 수 없습니다."));
+        }
+
+        var user = userOptional.get();
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+            return ResponseEntity.badRequest().body(Map.of("message", "비밀번호가 일치하지 않습니다."));
+        }
+
+        return ResponseEntity.ok().body(Map.of(
+                "message", "로그인 성공",
+                "username", user.getUsername(),
+                "nickname", user.getNickname()
+        ));
+    }
+
     @GetMapping("/oauth2/success")
     public ResponseEntity<?> handleOAuth2Success(Authentication authentication) {
         OAuth2User oauth2User = (OAuth2User) authentication.getPrincipal();
@@ -59,18 +81,17 @@ public class UsersController {
         Users user = usersRepository.findByUsername(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        if ("INCOMPLETE_PROFILE".equals(user.getUser_job())) {
-            return ResponseEntity.ok().body(Map.of("message", "프로필 완성이 필요합니다."));
-        } else {
-            return ResponseEntity.ok().body(Map.of(
-                    "id", user.getId(),
-                    "username", user.getUsername(),
-                    "nickname", user.getNickname(),
-                    "user_job", user.getUser_job(),
-                    "isAdmin", user.getIsAdmin()
-            ));
-        }
+        String userJob = user.getUser_job() != null ? user.getUser_job() : "";
+
+        return ResponseEntity.ok().body(Map.of(
+                "id", user.getId(),
+                "username", user.getUsername(),
+                "nickname", user.getNickname(),
+                "user_job", userJob,
+                "isAdmin", user.getIsAdmin()
+        ));
     }
+
 
     @PostMapping("/complete-profile")
     public ResponseEntity<?> saveProfile(@RequestBody Map<String, String> profileRequest, Authentication authentication) {

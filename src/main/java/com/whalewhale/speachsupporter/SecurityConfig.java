@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
@@ -44,18 +45,18 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, UsersRepository usersRepository) throws Exception {
         http
-                .cors(cors -> cors.configurationSource(corsConfigurationSource())) // CORS 설정 적용
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/login", "/register","/api/**", "/", "/list", "/email/send",
+                        .requestMatchers("/login", "/register", "/api/**", "/", "/list", "/email/send",
                                 "/email/verify", "/Presentation", "/oauth2/**", "/complete-profile", "/password/forgot",
                                 "/password/reset", "/bot/**", "/generate/**").permitAll()
                         .requestMatchers("/users").permitAll()
                         .anyRequest().authenticated())
                 .formLogin(formLogin -> formLogin
-                        .loginPage("/login")
+                        .loginPage("/login")  // 로그인 페이지 설정
+                        .defaultSuccessUrl("/", true)  // 로그인 성공 시 루트 페이지로 리디렉션
                         .successHandler((request, response, authentication) -> {
-                            // 로그인 성공 시 JSON 응답
                             response.setContentType("application/json;charset=UTF-8");
                             response.setStatus(200);
 
@@ -70,8 +71,8 @@ public class SecurityConfig {
 
                             ObjectMapper objectMapper = new ObjectMapper();
                             response.getWriter().write(objectMapper.writeValueAsString(data));
-                        }).failureHandler((request, response, exception) -> {
-                            // 로그인 실패 시 JSON 응답
+                        })
+                        .failureHandler((request, response, exception) -> {
                             response.setContentType("application/json;charset=UTF-8");
                             response.setStatus(401);
 
@@ -86,7 +87,7 @@ public class SecurityConfig {
                         .logoutUrl("/logout")
                         .logoutSuccessHandler((request, response, authentication) -> {
                             System.out.println("로그아웃 성공: " + (authentication != null ? authentication.getName() : "Anonymous"));
-                            response.sendRedirect("/");
+                            response.sendRedirect("/");  // 로그아웃 후 루트 페이지로 리디렉트
                         })
                         .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID"))
@@ -95,9 +96,21 @@ public class SecurityConfig {
                         .userInfoEndpoint(userInfo -> userInfo
                                 .userService(oAuth2UserService()))
                         .successHandler((request, response, authentication) -> {
-                            System.out.println("OAuth2 로그인 성공: " + authentication.getName());
-                            response.sendRedirect("/oauth2/success");
-                        }));
+                            response.setContentType("application/json;charset=UTF-8");
+                            response.setStatus(200);
+
+                            OAuth2User oauth2User = (OAuth2User) authentication.getPrincipal();
+                            String username = oauth2User.getAttribute("email");
+
+                            Map<String, String> data = new HashMap<>();
+                            data.put("message", "OAuth2 로그인 성공");
+                            data.put("username", username);
+
+                            ObjectMapper objectMapper = new ObjectMapper();
+                            response.getWriter().write(objectMapper.writeValueAsString(data));
+                        })
+                );
+
 
         return http.build();
     }
@@ -110,13 +123,13 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000")); // 허용할 출처 설정
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS")); // 허용할 메서드 설정
-        configuration.setAllowedHeaders(Arrays.asList("*")); // 허용할 헤더 설정
-        configuration.setAllowCredentials(true); // 자격 증명 허용 여부 설정
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));  // 프론트엔드 출처 설정
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(Arrays.asList("*"));
+        configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration); // 모든 경로에 대해 CORS 설정 적용
+        source.registerCorsConfiguration("/**", configuration);
         return source;
     }
 }
