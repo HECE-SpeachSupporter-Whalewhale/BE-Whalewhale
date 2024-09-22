@@ -25,7 +25,6 @@ public class Users {
 
     @NotEmpty
     @Size(min = 8, max = 12, message = "비밀번호는 8자에서 12자 사이어야 합니다.")
-    @Column(nullable = false)
     private String password;
 
     @NotEmpty
