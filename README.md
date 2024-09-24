@@ -67,7 +67,7 @@
 
 ## 📑 페이지 상세 내역
 
-<img alt="image" src="https://github.com/sesac-ydp5-2nd-C/2nd-project-beatbay-back/assets/95032287/7db2bd8a-2340-47d9-b5da-adcb9ad822af">
+<img alt="image" src="https://github.com/user-attachments/assets/3597e5ae-f84b-437c-9756-67a684f77e98">
 
 ## 🌟 화면 구성
 
