@@ -67,7 +67,7 @@
 
 ## 📑 페이지 상세 내역
 
-<img alt="image" src="https://github.com/user-attachments/assets/3597e5ae-f84b-437c-9756-67a684f77e98">
+<img alt="image" src="https://github.com/user-attachments/assets/d731c0dc-0ba1-427d-80d6-1ce547c0dbe6">
 
 ## 🌟 화면 구성
 
