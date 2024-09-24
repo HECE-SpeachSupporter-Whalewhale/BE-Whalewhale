@@ -67,18 +67,18 @@
 
 ## 📑 페이지 상세 내역
 
-<img alt="image" src="https://github.com/sesac-ydp5-2nd-C/2nd-project-beatbay-back/assets/95032287/7db2bd8a-2340-47d9-b5da-adcb9ad822af">
+<img alt="image" src="https://github.com/user-attachments/assets/3597e5ae-f84b-437c-9756-67a684f77e98">
 
 ## 🌟 화면 구성
 
 | 메인                                                                                                      | 로그인 & 회원가입                                                                                         |
 | --------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
-| ![ahwhew8](https://github.com/sessac-3rd-team-A/FE/assets/139740067/ce4807f0-1cd2-47bd-9a4a-66db8a7e2628) | ![ahwhew1](https://github.com/sessac-3rd-team-A/FE/assets/139740067/d4593599-e537-420f-b079-746605296ff5) |
+| ![ahwhew8](https://github.com/user-attachments/assets/7ea95d97-7b52-4da4-bcde-9314185fcf0e) | ![ahwhew1](https://github.com/user-attachments/assets/5c51129e-d649-4007-94bf-3b200634df54) |
 
-| 일기 작성                                                                                                 | 작성 결과                                                                                                 |
+| 발표문 저장하기                                                                                               | 위스와 발표하기                                                                                                 |
 | --------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
-| ![ahwhew2](https://github.com/sessac-3rd-team-A/FE/assets/139740067/d93cf879-03c6-473c-9195-5c770436dd7e) | ![ahwhew3](https://github.com/sessac-3rd-team-A/FE/assets/139740067/696eb8b1-2af5-4ca6-8bd3-210a9d54ecde) |
+| ![ahwhew2](https://github.com/user-attachments/assets/028c6921-d49e-4922-bd72-06803063e36f) | ![ahwhew3](https://github.com/user-attachments/assets/199dca6c-9248-4501-bd92-1515ca9673b5) |
 
-| 감정 트렌드                                                                                               | 회원 정보 수정                                                                                            |
+| 위스의 도움받기                                                                                               | 위스와 추억쌓기                                                                                            |
 | --------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
-| ![ahwhew4](https://github.com/sessac-3rd-team-A/FE/assets/139740067/72d04b6b-a392-4522-8c85-ef381fada80e) | ![ahwhew7](https://github.com/sessac-3rd-team-A/FE/assets/139740067/41075a07-c7a5-4f85-b1d3-dd2013c26d32) |
+| ![ahwhew4](https://github.com/user-attachments/assets/510ebf88-2534-46fe-ba50-3cad696151eb) | ![ahwhew7](https://github.com/user-attachments/assets/17d6f4a1-be91-44a6-bf2f-735a89c7da58) |
