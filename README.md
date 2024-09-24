@@ -62,7 +62,7 @@
 - Open API : 
 
 ## 🖥️ ERD
-
+<img alt="image" src="https://granite-wind-903.notion.site/image/https%3A%2F%2Fprod-files-secure.s3.us-west-2.amazonaws.com%2F994dc783-50e2-4c1c-8f3b-b970f6fc7aa4%2F5e5f1f9d-b846-4276-9731-50df67aa271c%2Fimage.png?table=block&id=10490f73-b1d0-8008-a672-f53e48d12e23&spaceId=994dc783-50e2-4c1c-8f3b-b970f6fc7aa4&width=2000&userId=&cache=v2">
 
 
 ## 📑 페이지 상세 내역
