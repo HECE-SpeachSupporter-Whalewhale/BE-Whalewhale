@@ -1,7 +1,8 @@
 
 # 제 20회 한성공학 경진대회 | 13팀 고래고래
 
-### 
+###
+<img src="https://github.com/user-attachments/assets/2cfb402b-3466-4079-9c7e-083dc8483029" /> 
 
 
 ## 🌬️ About Project
