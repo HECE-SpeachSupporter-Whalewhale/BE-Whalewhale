@@ -73,12 +73,12 @@
 
 | 메인                                                                                                      | 로그인 & 회원가입                                                                                         |
 | --------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
-| ![ahwhew8](https://github.com/user-attachments/assets/7ea95d97-7b52-4da4-bcde-9314185fcf0e) | ![ahwhew1](https://github.com/user-attachments/assets/5c51129e-d649-4007-94bf-3b200634df54) |
+| ![ahwhew8](https://github.com/user-attachments/assets/6a6097fc-771b-4188-afcc-184fe8f741c7) | ![ahwhew1](https://github.com/user-attachments/assets/16a1834c-d214-41c9-bc05-b3a76de50b54) |
 
-| 발표문 저장하기                                                                                               | 위스와 발표하기                                                                                                 |
+| 대본 저장하기                                                                                               | 위스와 발표하기                                                                                                 |
 | --------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
-| ![ahwhew2](https://github.com/user-attachments/assets/028c6921-d49e-4922-bd72-06803063e36f) | ![ahwhew3](https://github.com/user-attachments/assets/199dca6c-9248-4501-bd92-1515ca9673b5) |
+| ![ahwhew2](https://github.com/user-attachments/assets/d6718ae4-d055-4a62-b6df-97c6e2186fad) | ![ahwhew3](https://github.com/user-attachments/assets/73602950-edf8-47bc-92ad-f84af3c1716b) |
 
 | 위스의 도움받기                                                                                               | 위스와 추억쌓기                                                                                            |
 | --------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
-| ![ahwhew4](https://github.com/user-attachments/assets/510ebf88-2534-46fe-ba50-3cad696151eb) | ![ahwhew7](https://github.com/user-attachments/assets/17d6f4a1-be91-44a6-bf2f-735a89c7da58) |
+| ![ahwhew4](https://github.com/user-attachments/assets/bd1b61e8-88c5-4f42-aa90-3f9faedf208d) | ![ahwhew7](https://github.com/user-attachments/assets/93b73464-4a33-42b0-b960-e9306297cc66) |
