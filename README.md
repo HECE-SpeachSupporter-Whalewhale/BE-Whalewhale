@@ -59,8 +59,13 @@
 ### Back-end
 
 - 언어: <img src="https://img.shields.io/badge/Java-007396?style=flat-square&logo=Java&logoColor=white" />
-- 프레임워크 및 라이브러리: <img src="https://img.shields.io/badge/Spring-6DB33F?style=flat&logo=Spring&logoColor=white"/> <img src="https://img.shields.io/badge/Spring boot-6DB33F?style=flat&logo=Spring Boot&logoColor=white"/> <img src="https://img.shields.io/badge/Spring security-6DB33F?style=flat&logo=Spring Security&logoColor=white"/> <img src="https://img.shields.io/badge/MySQL-4479A1?style=flat&logo=MySQL&logoColor=white"/> <img src="https://img.shields.io/badge/Jpa-6DB33F?style=flat-square&logo=Java&logoColor=white" /> <img src="https://img.shields.io/badge/JSON-000000?style=flat-square&logo=JSON&logoColor=white" />
-- Open API : 
+- 프레임워크 및 라이브러리: <img src="https://img.shields.io/badge/Spring-6DB33F?style=flat&logo=Spring&logoColor=white" />
+  <img src="https://img.shields.io/badge/Spring%20Boot-6DB33F?style=flat&logo=Spring%20Boot&logoColor=white" />
+  <img src="https://img.shields.io/badge/Spring%20Security-6DB33F?style=flat&logo=Spring%20Security&logoColor=white" />
+  <img src="https://img.shields.io/badge/MySQL-4479A1?style=flat&logo=MySQL&logoColor=white" />
+  <img src="https://img.shields.io/badge/JPA-6DB33F?style=flat-square&logo=Java&logoColor=white" />
+  <img src="https://img.shields.io/badge/JSON-000000?style=flat-square&logo=JSON&logoColor=white" />
+- Open API :  <img src="https://img.shields.io/badge/OpenAPI-6BA539?style=flat-square&logo=OpenAPI%20Initiative&logoColor=white" />
 
 ## 🖥️ ERD
 <img alt="image" src="https://granite-wind-903.notion.site/image/https%3A%2F%2Fprod-files-secure.s3.us-west-2.amazonaws.com%2F994dc783-50e2-4c1c-8f3b-b970f6fc7aa4%2F5e5f1f9d-b846-4276-9731-50df67aa271c%2Fimage.png?table=block&id=10490f73-b1d0-8008-a672-f53e48d12e23&spaceId=994dc783-50e2-4c1c-8f3b-b970f6fc7aa4&width=2000&userId=&cache=v2">
