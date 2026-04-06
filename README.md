@@ -47,7 +47,7 @@
 | :-------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------: |
 | <img width="100px" src="https://avatars.githubusercontent.com/u/100843910?v=4"/> | <img width="100px" src="https://avatars.githubusercontent.com/u/128763594?v=4" /> |
 |                       [@22-JWL](https://github.com/22-JWL)                        |           [@gosumjigi](https://github.com/gosumjigi)           |
-| 서버구축 <br /> 위스의 도움받기 기능 구형 |            ERD 작성 및 백엔드 구현            |
+| 서버구축 <br /> 위스의 도움받기 기능 구현 |            ERD 작성 및 백엔드 구현            |
 
 ## 🖱 사용 기술
 
